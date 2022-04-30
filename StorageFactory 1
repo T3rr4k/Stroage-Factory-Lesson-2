@@ -1,0 +1,55 @@
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.6.0;
+
+import "./SimpleStorage.sol";
+
+contract StorageFactory {
+
+    SimpleStorage[] public SimpleStorageArray;
+
+    function createSimpleStorageContract() public {
+        SimpleStorage simpleStorage = new SimpleStorage();
+        SimpleStorageArray.push(simpleStorage);
+    }
+
+    function sfStore(uint256 _simpleStorageIndex, uint256 _simpleStorageNumber) public {
+
+        // **** Anytime you interact with 'another' contract (outside the contract your working in) you
+        // **** need 2 things
+        // **** 1) the contract Address
+        // **** 2) the contract ABI (Application Binary Interface)
+
+        // In this case, we'll get the Address by using the "push" function on function "createSimpleStorageContract()"
+        // This wil return the contract address we deployed
+
+        SimpleStorage simpleStorage = SimpleStorage(address(SimpleStorageArray[_simpleStorageIndex]));
+        // ^this^  equals ^^^^^^^^^^^^^^^^^^^^^^^  all this ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        // This creates a variable and saves the indexed value. **It's NOT efficient code to do this
+        // All that is needed is to index the value directly and output it.
+   
+        // SimpleStorage(address(SimpleStorageArray[_simpleStorageIndex]));
+        //                 ^          ^                 ^
+        //          Grab address   From inside        at Index
+    
+        simpleStorage.store(_simpleStorageNumber);
+        // This stores entered number into selected SimpleStorage address
+
+        }
+
+        function sfGet(uint256 _simpleStorageIndex) public view returns (uint256) {
+            SimpleStorage simpleStorage = SimpleStorage(address(SimpleStorageArray[_simpleStorageIndex]));
+            return simpleStorage.retrieve();
+        
+
+        // We'll get the ABI from the imported contract above (import "./SimpleStorage.sol";)
+
+        // Summary:
+        // After deplyment, this creates 3 buttons. 
+        // 1) createSimpleStorageContract - Each time it's clicked, a SimpleStorage Contract is created and stored in an array
+        // 2) sfStore - Enter the SimpleStorage contract number desired, Enter the number to store in said contract.
+        // 3) SimpleStorageArray - Enter SimpleStorage contract number and returns indicated contract address
+
+
+    }
+}
